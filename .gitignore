@@ -1,0 +1,5 @@
+# gerado na migracao Zoov
+.DS_Store
+.env
+.env.*
+!.env.example
