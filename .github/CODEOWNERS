@@ -1,0 +1,20 @@
+# CODEOWNERS — br.com.zoov.core.plataforma.governanca..github
+#
+# Os times abaixo precisam existir na organização br-com-zoov para que o GitHub
+# consiga atribuir os reviews. Time inexistente = regra silenciosamente ignorada.
+
+# Padrão: tudo pertence à Plataforma
+*                           @br-com-zoov/plataforma
+
+# Padrões da organização — mudança aqui afeta todos os repositórios
+/CONTRIBUTING.md            @br-com-zoov/plataforma @br-com-zoov/tech-leads
+/GOVERNANCE.md              @br-com-zoov/plataforma @br-com-zoov/tech-leads
+/CODE_OF_CONDUCT.md         @br-com-zoov/plataforma @br-com-zoov/tech-leads
+/docs/convencoes.md         @br-com-zoov/plataforma @br-com-zoov/tech-leads
+
+# Segurança
+/SECURITY.md                @br-com-zoov/seguranca
+
+# CI e automação de sync
+/.github/workflows/         @br-com-zoov/plataforma
+/sync/                      @br-com-zoov/plataforma

@@ -1,0 +1,61 @@
+name: ✨ Funcionalidade
+description: Propor uma capacidade nova ou uma melhoria
+title: "[feat]: "
+labels:
+  - enhancement
+  - triagem
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: Problema
+      description: Que dor isso resolve? Descreva a situação, não a solução.
+      placeholder: Hoje o time precisa conferir manualmente X toda vez que Y acontece.
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposta
+    attributes:
+      label: Proposta
+      description: Como você resolveria.
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternativas
+    attributes:
+      label: Alternativas consideradas
+      description: O que mais foi avaliado e por que foi descartado. "Não fazer nada" é uma alternativa válida.
+
+  - type: dropdown
+    id: impacto
+    attributes:
+      label: Impacto
+      options:
+        - Altera contrato público (API, evento, schema compartilhado)
+        - Interno ao componente
+        - Somente ferramentas ou documentação
+    validations:
+      required: true
+
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Critérios de aceite
+      description: Como saberemos que está pronto.
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmacoes
+    attributes:
+      label: Confirmações
+      options:
+        - label: Procurei por issues existentes com a mesma proposta
+          required: true
+        - label: Se altera contrato público, li o processo em GOVERNANCE.md
+          required: false

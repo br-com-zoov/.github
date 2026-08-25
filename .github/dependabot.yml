@@ -1,0 +1,24 @@
+version: 2
+
+updates:
+  # Actions usadas pelos workflows deste repositório (.github/workflows/).
+  #
+  # Atenção: o ecossistema github-actions do Dependabot só varre
+  # .github/workflows/ e action.yml de actions compostas. Os arquivos em
+  # workflow-templates/ NÃO são atualizados automaticamente — quando um PR do
+  # Dependabot subir uma versão aqui, replique a mesma versão lá.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: America/Sao_Paulo
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "⬆️ deps"
+    labels:
+      - dependencies
+      - github-actions
+    reviewers:
+      - br-com-zoov/plataforma
