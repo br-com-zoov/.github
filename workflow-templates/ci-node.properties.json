@@ -1,0 +1,7 @@
+{
+  "name": "CI — Node.js",
+  "description": "Lint, typecheck, testes e build em Node 20 e 22. Padrão Zoov.",
+  "iconName": "octicon nodejs",
+  "categories": ["Continuous integration", "JavaScript", "TypeScript"],
+  "filePatterns": ["package\\.json$"]
+}

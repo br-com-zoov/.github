@@ -1,0 +1,6 @@
+{
+  "name": "Dependency review",
+  "description": "Bloqueia PRs com dependências vulneráveis ou de licença incompatível. Padrão Zoov.",
+  "iconName": "octicon package-dependencies",
+  "categories": ["Security", "Dependency management"]
+}
