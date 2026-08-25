@@ -1,0 +1,72 @@
+name: CI
+
+on:
+  push:
+    branches: [$default-branch]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Ref do SDK: um canal (stable, beta) ou uma tag (3.24.5).
+  # Prefira a tag — canal move e torna o build não reprodutível.
+  FLUTTER_REF: stable
+
+jobs:
+  ci:
+    name: Analyze, testes e build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Cache do SDK Flutter
+        id: cache-flutter
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.tool_cache }}/flutter
+          key: flutter-${{ runner.os }}-${{ env.FLUTTER_REF }}
+
+      # Instalado a partir do repositório oficial do Flutter em vez de uma
+      # action de terceiro — ver a política de actions em workflow-templates/README.md.
+      - name: Instalar Flutter
+        if: steps.cache-flutter.outputs.cache-hit != 'true'
+        run: |
+          git clone --depth 1 --branch "$FLUTTER_REF" \
+            https://github.com/flutter/flutter.git "${{ runner.tool_cache }}/flutter"
+
+      - name: Configurar PATH
+        run: |
+          echo "${{ runner.tool_cache }}/flutter/bin" >> "$GITHUB_PATH"
+          echo "${{ runner.tool_cache }}/flutter/bin/cache/dart-sdk/bin" >> "$GITHUB_PATH"
+
+      - name: Versão
+        run: |
+          flutter --version
+          flutter config --no-analytics
+
+      - name: Dependências
+        run: flutter pub get
+
+      - name: Formatação
+        run: dart format --output=none --set-exit-if-changed .
+
+      - name: Analyze
+        run: flutter analyze --fatal-infos
+
+      - name: Testes
+        run: flutter test --coverage
+
+      - name: Build Android
+        if: hashFiles('android/**') != ''
+        run: flutter build apk --debug
+
+      - name: Build Web
+        if: hashFiles('web/**') != ''
+        run: flutter build web --release

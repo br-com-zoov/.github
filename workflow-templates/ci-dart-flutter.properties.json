@@ -1,0 +1,7 @@
+{
+  "name": "CI — Dart / Flutter",
+  "description": "Formatação, analyze, testes com cobertura e build Android/Web. SDK instalado do repositório oficial, sem action de terceiro. Padrão Zoov.",
+  "iconName": "octicon device-mobile",
+  "categories": ["Continuous integration", "Dart", "Flutter", "Mobile"],
+  "filePatterns": ["pubspec\\.yaml$"]
+}

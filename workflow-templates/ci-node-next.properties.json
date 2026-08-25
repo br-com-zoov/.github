@@ -1,0 +1,7 @@
+{
+  "name": "CI — Next.js",
+  "description": "Lint, typecheck, testes e build com cache do .next. Padrão Zoov para frontends Next.",
+  "iconName": "octicon browser",
+  "categories": ["Continuous integration", "TypeScript", "Next.js"],
+  "filePatterns": ["next\\.config\\.(js|mjs|ts)$"]
+}
