@@ -2,13 +2,13 @@ blank_issues_enabled: false
 
 contact_links:
   - name: 🔐 Vulnerabilidade de segurança
-    url: https://github.com/br-com-zoov/br.com.zoov.core.plataforma.governanca..github/blob/main/SECURITY.md
+    url: https://github.com/br-com-zoov/.github/blob/main/SECURITY.md
     about: Não abra issue pública. Siga a política de divulgação responsável.
 
   - name: 💬 Dúvida de uso ou integração
-    url: https://github.com/br-com-zoov/br.com.zoov.core.plataforma.governanca..github/blob/main/SUPPORT.md
+    url: https://github.com/br-com-zoov/.github/blob/main/SUPPORT.md
     about: Perguntas vão para os canais de suporte, não para issues.
 
   - name: 📖 Convenções da organização
-    url: https://github.com/br-com-zoov/br.com.zoov.core.plataforma.governanca..github/blob/main/docs/convencoes.md
+    url: https://github.com/br-com-zoov/.github/blob/main/docs/convencoes.md
     about: Nomes de repositório, padrão de branch e de commit.

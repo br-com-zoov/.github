@@ -29,7 +29,7 @@ entrega.
 | `produto` | Serviços voltados ao cliente final |
 | `infra` | Provisionamento, observabilidade, pipelines |
 
-A convenção completa está em [`docs/convencoes.md`](https://github.com/br-com-zoov/br.com.zoov.core.plataforma.governanca..github/blob/main/docs/convencoes.md).
+A convenção completa está em [`docs/convencoes.md`](https://github.com/br-com-zoov/.github/blob/main/docs/convencoes.md).
 
 ## Padrões
 
@@ -37,12 +37,12 @@ Templates de issue e PR, política de segurança e guia de contribuição são
 definidos centralmente no repositório de governança e valem para toda a
 organização.
 
-- [Guia de contribuição](https://github.com/br-com-zoov/br.com.zoov.core.plataforma.governanca..github/blob/main/CONTRIBUTING.md)
-- [Política de segurança](https://github.com/br-com-zoov/br.com.zoov.core.plataforma.governanca..github/blob/main/SECURITY.md)
-- [Código de conduta](https://github.com/br-com-zoov/br.com.zoov.core.plataforma.governanca..github/blob/main/CODE_OF_CONDUCT.md)
-- [Suporte](https://github.com/br-com-zoov/br.com.zoov.core.plataforma.governanca..github/blob/main/SUPPORT.md)
+- [Guia de contribuição](https://github.com/br-com-zoov/.github/blob/main/CONTRIBUTING.md)
+- [Política de segurança](https://github.com/br-com-zoov/.github/blob/main/SECURITY.md)
+- [Código de conduta](https://github.com/br-com-zoov/.github/blob/main/CODE_OF_CONDUCT.md)
+- [Suporte](https://github.com/br-com-zoov/.github/blob/main/SUPPORT.md)
 
 ## Contato
 
 Dúvidas sobre um repositório específico: abra uma issue nele.
-Questões de segurança: siga a [política de divulgação](https://github.com/br-com-zoov/br.com.zoov.core.plataforma.governanca..github/blob/main/SECURITY.md) — **não** abra issue pública.
+Questões de segurança: siga a [política de divulgação](https://github.com/br-com-zoov/.github/blob/main/SECURITY.md) — **não** abra issue pública.

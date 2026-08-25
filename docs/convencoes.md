@@ -18,9 +18,14 @@ br.com.zoov.<dominio>.<subdominio>.<componente>
 Sem acento, sem `_`, sem maiúscula. O nome é imutável depois de criado — renomear
 quebra remotes, pipelines e referências de pacote.
 
-**Caso especial:** repositórios que espelham um repositório reservado do GitHub
-recebem o nome reservado como sufixo após ponto duplo — por exemplo
-`br.com.zoov.core.plataforma.governanca..github` para o `.github` da org.
+**Exceção — nomes reservados:** quando o GitHub exige um nome específico para
+que a funcionalidade exista, o nome reservado vence a convenção. É o caso de
+[`.github`](https://github.com/br-com-zoov/.github), que só é lido como fonte de
+defaults da organização com esse nome exato. O componente lógico
+(`core.plataforma.governanca`) fica registrado no README do repositório.
+
+A exceção vale só para nomes que o GitHub reserva — não é uma porta para
+encurtar nomes por conveniência.
 
 ### Tópicos obrigatórios
 
