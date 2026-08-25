@@ -1,0 +1,171 @@
+name: Sync health files
+
+# Copia os arquivos de governança deste repositório para os repositórios
+# listados em sync/targets.txt, sempre via pull request.
+#
+# Requer o segredo ZOOV_GOVERNANCA_TOKEN — PAT fine-grained ou token de GitHub
+# App com "contents: write" e "pull_requests: write" nos repositórios-alvo.
+# O GITHUB_TOKEN padrão não serve: ele não alcança outros repositórios.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Apenas mostrar o que mudaria, sem abrir PR
+        type: boolean
+        default: true
+      apenas:
+        description: Sincronizar somente este repositório (owner/nome). Vazio = todos os alvos.
+        type: string
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-health-files
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    name: Propagar governança
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Conferir credencial
+        env:
+          GH_TOKEN: ${{ secrets.ZOOV_GOVERNANCA_TOKEN }}
+        run: |
+          set -euo pipefail
+          if [ -z "${GH_TOKEN}" ]; then
+            echo "::error::segredo ZOOV_GOVERNANCA_TOKEN nao configurado. Ver README.md."
+            exit 1
+          fi
+          gh auth status
+
+      - name: Sincronizar
+        env:
+          GH_TOKEN: ${{ secrets.ZOOV_GOVERNANCA_TOKEN }}
+          DRY_RUN: ${{ inputs.dry_run }}
+          APENAS: ${{ inputs.apenas }}
+          BRANCH: chore/sync-governanca-${{ github.run_id }}
+        run: |
+          set -euo pipefail
+
+          origem="$PWD"
+          trabalho="$(mktemp -d)"
+          alterados=0
+          ignorados=0
+
+          arquivos=()
+          while IFS= read -r linha; do
+            linha="${linha%%$'\r'}"
+            [ -z "$linha" ] && continue
+            case "$linha" in \#*) continue ;; esac
+            arquivos+=("$linha")
+          done < "$origem/sync/files.txt"
+
+          if [ "${#arquivos[@]}" -eq 0 ]; then
+            echo "::error::sync/files.txt nao lista nenhum arquivo"
+            exit 1
+          fi
+
+          alvos=()
+          while IFS= read -r linha; do
+            linha="${linha%%$'\r'}"
+            [ -z "$linha" ] && continue
+            case "$linha" in \#*) continue ;; esac
+            if [ -n "$APENAS" ] && [ "$linha" != "$APENAS" ]; then
+              continue
+            fi
+            alvos+=("$linha")
+          done < "$origem/sync/targets.txt"
+
+          if [ "${#alvos[@]}" -eq 0 ]; then
+            echo "Nenhum repositorio-alvo. Preencha sync/targets.txt." >> "$GITHUB_STEP_SUMMARY"
+            echo "::warning::nenhum repositorio-alvo selecionado"
+            exit 0
+          fi
+
+          echo "## Sync de governança" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Repositório | Resultado |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|" >> "$GITHUB_STEP_SUMMARY"
+
+          for alvo in "${alvos[@]}"; do
+            echo "::group::$alvo"
+            destino="$trabalho/${alvo//\//_}"
+
+            if ! gh repo clone "$alvo" "$destino" -- --depth 1 --quiet; then
+              echo "| \`$alvo\` | ❌ falha ao clonar |" >> "$GITHUB_STEP_SUMMARY"
+              echo "::error::nao foi possivel clonar $alvo"
+              ignorados=$((ignorados + 1))
+              echo "::endgroup::"
+              continue
+            fi
+
+            for arquivo in "${arquivos[@]}"; do
+              mkdir -p "$destino/$(dirname "$arquivo")"
+              cp "$origem/$arquivo" "$destino/$arquivo"
+            done
+
+            cd "$destino"
+
+            if [ -z "$(git status --porcelain)" ]; then
+              echo "| \`$alvo\` | ✅ já atualizado |" >> "$GITHUB_STEP_SUMMARY"
+              cd "$origem"
+              echo "::endgroup::"
+              continue
+            fi
+
+            git --no-pager status --short
+
+            if [ "$DRY_RUN" = "true" ]; then
+              echo "| \`$alvo\` | 🔍 mudanças pendentes (dry run) |" >> "$GITHUB_STEP_SUMMARY"
+              alterados=$((alterados + 1))
+              cd "$origem"
+              echo "::endgroup::"
+              continue
+            fi
+
+            git config user.name "zoov-governanca[bot]"
+            git config user.email "governanca@users.noreply.github.com"
+            git switch -c "$BRANCH"
+            for arquivo in "${arquivos[@]}"; do
+              git add "$arquivo"
+            done
+            git commit -m "🔧 chore: sync governance files from platform repo"
+            git push --quiet origin "$BRANCH"
+
+            cat > "$trabalho/pr-body.md" <<CORPO
+          Sincronização automática dos arquivos de governança da organização.
+
+          - Origem: \`${{ github.repository }}\` @ \`${{ github.sha }}\`
+          - Execução: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+          Estes arquivos são mantidos centralmente. Para alterá-los, abra um PR no
+          repositório de governança — mudanças feitas aqui serão sobrescritas no
+          próximo sync.
+          CORPO
+
+            url="$(gh pr create \
+              --repo "$alvo" \
+              --head "$BRANCH" \
+              --title "🔧 chore: sync governance files from platform repo" \
+              --body-file "$trabalho/pr-body.md")"
+
+            echo "| \`$alvo\` | 🚀 [PR aberto]($url) |" >> "$GITHUB_STEP_SUMMARY"
+            alterados=$((alterados + 1))
+            cd "$origem"
+            echo "::endgroup::"
+          done
+
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "Alvos: ${#alvos[@]} · Com mudanças: $alterados · Ignorados: $ignorados" >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$ignorados" -gt 0 ]; then
+            exit 1
+          fi

@@ -1,0 +1,156 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Sintaxe e consistência
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Preparar dependências
+        run: python3 -m pip install --quiet --disable-pip-version-check pyyaml
+
+      - name: Validar sintaxe YAML
+        run: |
+          python3 - <<'PY'
+          import pathlib
+          import sys
+
+          import yaml
+
+          falhas = []
+          for caminho in sorted(pathlib.Path(".").rglob("*.y*ml")):
+              if ".git/" in str(caminho):
+                  continue
+              try:
+                  yaml.safe_load(caminho.read_text(encoding="utf-8"))
+              except yaml.YAMLError as erro:
+                  falhas.append(f"{caminho}: {erro}")
+              else:
+                  print(f"ok  {caminho}")
+
+          if falhas:
+              print("\nYAML inválido:", file=sys.stderr)
+              for falha in falhas:
+                  print(f"  {falha}", file=sys.stderr)
+              sys.exit(1)
+          PY
+
+      - name: Validar templates de issue
+        run: |
+          python3 - <<'PY'
+          import pathlib
+          import sys
+
+          import yaml
+
+          diretorio = pathlib.Path(".github/ISSUE_TEMPLATE")
+          falhas = []
+
+          for caminho in sorted(diretorio.glob("*.yml")):
+              if caminho.name == "config.yml":
+                  continue
+              dados = yaml.safe_load(caminho.read_text(encoding="utf-8"))
+              for chave in ("name", "description", "body"):
+                  if not dados.get(chave):
+                      falhas.append(f"{caminho}: falta a chave obrigatoria '{chave}'")
+              for indice, campo in enumerate(dados.get("body") or []):
+                  if "type" not in campo:
+                      falhas.append(f"{caminho}: body[{indice}] sem 'type'")
+                  elif campo["type"] != "markdown" and "id" not in campo:
+                      falhas.append(f"{caminho}: body[{indice}] sem 'id'")
+
+          config = diretorio / "config.yml"
+          if not config.exists():
+              falhas.append(f"{config}: ausente")
+
+          if falhas:
+              print("Templates de issue invalidos:", file=sys.stderr)
+              for falha in falhas:
+                  print(f"  {falha}", file=sys.stderr)
+              sys.exit(1)
+
+          print("Templates de issue validos.")
+          PY
+
+      - name: Validar workflow-templates
+        run: |
+          python3 - <<'PY'
+          import json
+          import pathlib
+          import sys
+
+          diretorio = pathlib.Path("workflow-templates")
+          falhas = []
+
+          for caminho in sorted(diretorio.glob("*.yml")):
+              propriedades = caminho.with_suffix(".properties.json")
+              if not propriedades.exists():
+                  falhas.append(f"{caminho}: falta {propriedades.name}")
+                  continue
+              dados = json.loads(propriedades.read_text(encoding="utf-8"))
+              for chave in ("name", "description"):
+                  if not dados.get(chave):
+                      falhas.append(f"{propriedades}: falta a chave '{chave}'")
+
+          for propriedades in sorted(diretorio.glob("*.properties.json")):
+              workflow = pathlib.Path(str(propriedades).replace(".properties.json", ".yml"))
+              if not workflow.exists():
+                  falhas.append(f"{propriedades}: sem workflow correspondente")
+
+          if falhas:
+              print("workflow-templates inconsistentes:", file=sys.stderr)
+              for falha in falhas:
+                  print(f"  {falha}", file=sys.stderr)
+              sys.exit(1)
+
+          print("workflow-templates consistentes.")
+          PY
+
+      - name: Validar listas do sync
+        run: |
+          set -euo pipefail
+          faltando=0
+          while IFS= read -r arquivo; do
+            [ -z "$arquivo" ] && continue
+            case "$arquivo" in \#*) continue ;; esac
+            if [ ! -f "$arquivo" ]; then
+              echo "::error file=sync/files.txt::'$arquivo' esta listado no sync mas nao existe"
+              faltando=1
+            fi
+          done < sync/files.txt
+          exit "$faltando"
+
+      - name: Verificar arquivos de saúde obrigatórios
+        run: |
+          set -euo pipefail
+          faltando=0
+          for arquivo in \
+            README.md \
+            CODE_OF_CONDUCT.md \
+            CONTRIBUTING.md \
+            GOVERNANCE.md \
+            SECURITY.md \
+            SUPPORT.md \
+            profile/README.md \
+            .github/CODEOWNERS \
+            .github/PULL_REQUEST_TEMPLATE.md \
+            .github/dependabot.yml
+          do
+            if [ ! -f "$arquivo" ]; then
+              echo "::error::arquivo obrigatorio ausente: $arquivo"
+              faltando=1
+            fi
+          done
+          exit "$faltando"

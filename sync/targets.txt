@@ -1,0 +1,11 @@
+# Repositórios que recebem os arquivos de governança via workflow "Sync health files".
+#
+# Um repositório por linha, no formato owner/nome. Linhas em branco e linhas
+# iniciadas por # são ignoradas.
+#
+# O sync SEMPRE abre um pull request — nunca faz push na branch padrão do alvo.
+# O repositório precisa existir e ter a branch padrão criada.
+#
+# Exemplo:
+# br-com-zoov/br.com.zoov.core.plataforma.identidade
+# br-com-zoov/br.com.zoov.produto.pagamentos.gateway-pix
