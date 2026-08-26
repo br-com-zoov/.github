@@ -1,0 +1,47 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [$default-branch]
+  pull_request:
+    branches: [$default-branch]
+  schedule:
+    # Segunda-feira, 06:00 UTC (03:00 America/Sao_Paulo)
+    - cron: '0 6 * * 1'
+
+permissions:
+  contents: read
+
+jobs:
+  analisar:
+    name: Analisar ${{ matrix.language }}
+    runs-on: ubuntu-latest
+
+    permissions:
+      security-events: write
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        # Ajuste para as linguagens do repositório.
+        language: ['javascript-typescript']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Inicializar CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          language: ${{ matrix.language }}
+          queries: security-extended
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v4
+
+      - name: Analisar
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: /language:${{ matrix.language }}

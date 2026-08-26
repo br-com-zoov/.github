@@ -1,0 +1,63 @@
+name: 🔧 Tarefa técnica
+description: Trabalho de manutenção, débito técnico, infraestrutura ou tooling
+title: "[chore]: "
+labels:
+  - chore
+  - triagem
+body:
+  - type: textarea
+    id: contexto
+    attributes:
+      label: Contexto
+      description: Por que este trabalho existe. Qual o custo de não fazer.
+    validations:
+      required: true
+
+  - type: textarea
+    id: escopo
+    attributes:
+      label: Escopo
+      description: O que está dentro e, principalmente, o que está fora.
+      value: |
+        **Dentro:**
+        -
+
+        **Fora:**
+        -
+    validations:
+      required: true
+
+  - type: dropdown
+    id: categoria
+    attributes:
+      label: Categoria
+      options:
+        - Débito técnico
+        - Infraestrutura
+        - Tooling e CI
+        - Dependências
+        - Observabilidade
+        - Documentação
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risco
+    attributes:
+      label: Risco de execução
+      options:
+        - Baixo — reversível, sem impacto em produção
+        - Médio — impacto contido, com rollback conhecido
+        - Alto — toca produção, autenticação ou dados
+    validations:
+      required: true
+
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Critérios de aceite
+      value: |
+        - [ ]
+        - [ ]
+    validations:
+      required: true

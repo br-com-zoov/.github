@@ -1,0 +1,6 @@
+{
+  "name": "CodeQL — análise de segurança",
+  "description": "Varredura de vulnerabilidades no código, a cada PR e semanalmente. Padrão Zoov.",
+  "iconName": "octicon shield-check",
+  "categories": ["Security", "Code scanning"]
+}

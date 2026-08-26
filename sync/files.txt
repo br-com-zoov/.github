@@ -1,0 +1,14 @@
+# Arquivos copiados deste repositório para cada alvo do sync.
+#
+# Um caminho por linha, relativo à raiz. O caminho de destino é o mesmo do
+# caminho de origem. Linhas em branco e iniciadas por # são ignoradas.
+
+CODE_OF_CONDUCT.md
+CONTRIBUTING.md
+SECURITY.md
+SUPPORT.md
+.github/PULL_REQUEST_TEMPLATE.md
+.github/ISSUE_TEMPLATE/config.yml
+.github/ISSUE_TEMPLATE/bug.yml
+.github/ISSUE_TEMPLATE/feature.yml
+.github/ISSUE_TEMPLATE/tarefa-tecnica.yml

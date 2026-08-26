@@ -1,0 +1,92 @@
+name: 🐛 Bug
+description: Algo não funciona como deveria
+title: "[bug]: "
+labels:
+  - bug
+  - triagem
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Antes de abrir: confira se já existe issue sobre o mesmo problema e
+        confirme que está na versão mais recente do componente.
+
+        **Não inclua** credenciais, tokens ou dados de cliente nos logs.
+
+  - type: textarea
+    id: descricao
+    attributes:
+      label: O que acontece
+      description: Descreva o comportamento observado.
+      placeholder: Ao chamar o endpoint X com o payload Y, a resposta é 500.
+    validations:
+      required: true
+
+  - type: textarea
+    id: esperado
+    attributes:
+      label: O que deveria acontecer
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproducao
+    attributes:
+      label: Como reproduzir
+      description: Passos numerados, do estado inicial até a falha.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: input
+    id: versao
+    attributes:
+      label: Versão
+      description: Tag, commit ou versão do pacote.
+      placeholder: v1.4.2 / commit a1b2c3d
+    validations:
+      required: true
+
+  - type: dropdown
+    id: ambiente
+    attributes:
+      label: Ambiente
+      options:
+        - Produção
+        - Homologação
+        - Desenvolvimento
+        - Local
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severidade
+    attributes:
+      label: Severidade
+      options:
+        - Crítica — indisponibilidade ou perda de dados
+        - Alta — funcionalidade principal quebrada, sem contorno
+        - Média — funcionalidade quebrada, com contorno
+        - Baixa — incômodo, cosmético
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs e evidências
+      description: Trechos de log, stack trace, request id. Serão renderizados como código.
+      render: shell
+
+  - type: checkboxes
+    id: confirmacoes
+    attributes:
+      label: Confirmações
+      options:
+        - label: Procurei por issues existentes sobre este problema
+          required: true
+        - label: Não há credencial, token ou dado de cliente nesta issue
+          required: true

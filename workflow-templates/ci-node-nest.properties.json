@@ -1,0 +1,7 @@
+{
+  "name": "CI — NestJS",
+  "description": "Lint, formatação, typecheck, testes unitários e e2e com Postgres, e build em Node 22 e 24. Padrão Zoov para backends Nest.",
+  "iconName": "octicon server",
+  "categories": ["Continuous integration", "TypeScript", "Node"],
+  "filePatterns": ["nest-cli\\.json$"]
+}

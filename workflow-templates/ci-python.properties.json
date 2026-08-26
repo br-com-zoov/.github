@@ -1,0 +1,7 @@
+{
+  "name": "CI — Python",
+  "description": "Ruff (lint e formatação) e pytest em Python 3.12 e 3.13. Padrão Zoov.",
+  "iconName": "octicon file-code",
+  "categories": ["Continuous integration", "Python"],
+  "filePatterns": ["pyproject\\.toml$", "requirements.*\\.txt$"]
+}
