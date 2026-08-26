@@ -11,9 +11,9 @@ Starter workflows oferecidos aos repositórios da organização. Aparecem na aba
 
 | Template | Para que serve |
 |---|---|
-| `ci-node-nest.yml` | Backend NestJS: lint, formatação, typecheck, testes unitários e e2e com Postgres, build |
-| `ci-node-next.yml` | Frontend Next.js: lint, typecheck, testes e build com cache do `.next` |
-| `ci-python.yml` | Ruff (lint e formatação) e pytest em Python 3.11 e 3.12 |
+| `ci-node-nest.yml` | Backend NestJS em Node 22 e 24: lint, formatação, typecheck, testes unitários e e2e com Postgres, build |
+| `ci-node-next.yml` | Frontend Next.js em Node 22 e 24: lint, typecheck, testes e build com cache do `.next` |
+| `ci-python.yml` | Ruff (lint e formatação) e pytest em Python 3.12 e 3.13 |
 | `ci-dart-flutter.yml` | Flutter: formatação, analyze, testes com cobertura, build Android e Web |
 | `codeql.yml` | Análise estática de segurança, por PR e semanal |
 | `dependency-review.yml` | Bloqueia PRs com dependência vulnerável ou licença incompatível |
@@ -35,7 +35,9 @@ O workflow `validate` falha se um dos dois faltar.
 
 ## Política de actions
 
-- Actions de `actions/*` e `github/*` podem usar tag de major (`@v4`).
+- Actions de `actions/*` e `github/*` podem usar tag de major (`@v7`, `@v6`…).
+  Confira a major atual antes de copiar um template — runner recusa action
+  presa a runtime de Node fora de suporte.
 - **Qualquer action de terceiro precisa ser fixada por SHA completo**, com a
   versão em comentário ao lado. Nenhum template atual usa action de terceiro —
   é por isso que `ci-dart-flutter.yml` instala o SDK clonando

@@ -24,11 +24,11 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Cache do SDK Flutter
         id: cache-flutter
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ${{ runner.tool_cache }}/flutter
           key: flutter-${{ runner.os }}-${{ env.FLUTTER_REF }}
